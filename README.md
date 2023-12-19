@@ -48,7 +48,8 @@ Swagger API Documentation: Accessible at http://localhost/api/docs.
 #### Swagger Documentation:
 - Accessible at http://localhost:3000/api/docs.
 
-#### Swagger Documentation:
+#### Tests:
+- Run MongoDB and provide envs in `.env`
 - Run Tests `npm test`.
 
 #### Frontend
