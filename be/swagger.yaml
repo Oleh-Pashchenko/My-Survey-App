@@ -1,0 +1,201 @@
+openapi: '3.0.0'
+info:
+  title: 'Survey API'
+  version: '0.0.1'
+
+paths:
+  /api/surveys:
+    post:
+      summary: 'Create a survey'
+      tags:
+        - 'Surveys'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveyDTO'
+      responses:
+        '201':
+          description: 'Survey created successfully'
+    get:
+      summary: 'Get all surveys'
+      tags:
+        - 'Surveys'
+      responses:
+        '200':
+          description: 'List of all surveys'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SurveyDTO'
+
+  /api/surveys/{surveyId}:
+    get:
+      summary: 'Get a specific survey'
+      tags:
+        - 'Surveys'
+      parameters:
+        - in: path
+          name: surveyId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Details of a specific survey'
+
+  /api/surveys/{surveyId}/results:
+    get:
+      summary: 'Get survey results'
+      tags:
+        - 'Surveys'
+      parameters:
+        - in: path
+          name: surveyId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Survey results'
+
+  /api/responses/{surveyId}:
+    post:
+      summary: 'Submit a survey response'
+      tags:
+        - 'Responses'
+      parameters:
+        - in: path
+          name: surveyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveyResponseDTO'
+      responses:
+        '201':
+          description: 'Response submitted successfully'
+
+  /api/responses/{surveyId}/user/{userId}:
+    get:
+      summary: 'Get user responses for a specific survey'
+      tags:
+        - 'Responses'
+      parameters:
+        - in: path
+          name: surveyId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'List of user responses for a specific survey'
+
+  /api/responses/user/{userId}:
+    get:
+      summary: 'Get user responses by user ID'
+      tags:
+        - 'Responses'
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'List of user responses by user ID'
+
+  /api/users:
+    post:
+      summary: 'Create a user'
+      tags:
+        - 'Users'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+      responses:
+        '201':
+          description: 'User created successfully'
+    get:
+      summary: 'Get all users'
+      tags:
+        - 'Users'
+      responses:
+        '200':
+          description: 'List of all users'
+
+components:
+  schemas:
+    SurveyDTO:
+      type: object
+      required:
+        - title
+        - questions
+      properties:
+        title:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionDTO'
+
+    QuestionDTO:
+      type: object
+      required:
+        - text
+        - options
+      properties:
+        text:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+
+    SurveyResponseDTO:
+      type: object
+      required:
+        - userId
+        - answers
+      properties:
+        userId:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerDTO'
+
+    AnswerDTO:
+      type: object
+      required:
+        - questionId
+        - selectedOptionIndex
+      properties:
+        questionId:
+          type: string
+        selectedOptionIndex:
+          type: number
+
+    CreateUserDTO:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
