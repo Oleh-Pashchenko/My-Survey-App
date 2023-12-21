@@ -1,8 +1,12 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 const generateSurveyQuestions = async (topic) => {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OpenAI API key is not set in environment variables.');
+  }
+
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
   const prompt = `Generate a list of survey questions with multiple-choice options for a survey about ${topic}. Format the output as a JSON array, where each element is an object with the question text and an array of options.`;
 
   try {
