@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import * as dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import 'reflect-metadata';
@@ -11,9 +10,8 @@ import responseRoutes from './routes/responseRoutes';
 import surveyRoutes from './routes/surveyRoutes';
 import userRoutes from './routes/userRoutes';
 
-dotenv.config({ path: '../.env' });
-
 const { DB_HOST, DB_PORT, DB_DATABASE } = process.env;
+
 const app = express();
 
 app.use(ErrorMiddleware);
@@ -52,4 +50,3 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
 });
 
 export default app;
-

@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  aiGenerateSurveyQuestions,
   createSurvey,
   getSurvey,
   getSurveyResults,
@@ -12,8 +13,10 @@ const router = express.Router();
 
 router.post('/api/surveys', ValidationMiddleware(SurveyDTO), createSurvey);
 
+router.get('/api/surveys/ai-generate', aiGenerateSurveyQuestions);
 router.get('/api/surveys/:surveyId/results', getSurveyResults);
 router.get('/api/surveys/:surveyId', getSurvey);
+
 router.get('/api/surveys', getSurveys);
 
 export default router;

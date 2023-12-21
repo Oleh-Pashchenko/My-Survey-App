@@ -42,7 +42,7 @@ Swagger API Documentation: Accessible at http://localhost/api/docs.
 1. Update .env for Backend: Before starting the backend, update the `.env` file to provide `DB_HOST`, `DB_DATABASE`, and `DB_PORT` for MongoDB.
 
 2. Navigate to the Backend Directory: `cd be`.
-3. Install Dependencies: `npm install`.  
+3. Install Dependencies: `npm install --legacy-peer-deps`.  
 4. Start the Backend (in development mode): `npm run dev`.
 
 #### Swagger Documentation:
@@ -54,7 +54,7 @@ Swagger API Documentation: Accessible at http://localhost/api/docs.
 
 #### Frontend
 1. Navigate to the Frontend Directory: `cd fe`.
-2. Install Dependencies: `npm install`.  
+2. Install Dependencies: `npm install --legacy-peer-deps`.  
 3. Start the Backend (in development mode): `npm run dev`.
 4. Access the Frontend: Open http://localhost:3001 in your web browser.
 

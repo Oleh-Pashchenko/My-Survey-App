@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
+import * as openai from '../services/openai.service';
 import * as surveyService from '../services/surveyService';
+
 
 export const createSurvey = async (req: Request, res: Response) => {
   try {
@@ -35,6 +37,17 @@ export const getSurveyResults = async (req: Request, res: Response) => {
 
   try {
     const results = await surveyService.getSurveyResults(surveyId);
+    res.json(results);
+  } catch (error) {
+    res.status(500).send({ message: 'Error fetching survey results', error });
+  }
+};
+
+export const aiGenerateSurveyQuestions = async (req: Request, res: Response) => {
+  const { title } = req.query;
+
+  try {
+    const results = await openai.generateSurveyQuestions(title);
     res.json(results);
   } catch (error) {
     res.status(500).send({ message: 'Error fetching survey results', error });
