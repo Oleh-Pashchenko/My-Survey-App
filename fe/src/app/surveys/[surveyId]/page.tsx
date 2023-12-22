@@ -3,6 +3,17 @@ import { useUserContext } from '@/context/userProvider';
 import { API_URI } from '@/utils/env';
 import { Button, Card, List, Radio, Typography, message } from 'antd';
 import { useRouter } from 'next/navigation';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
 const { Title, Text } = Typography;
 
 import { useEffect, useState } from 'react';
@@ -26,16 +37,13 @@ const SurveyDetails = ({ params }: any) => {
     };
 
     try {
-      const apiResponse = await fetch(
-        `${API_URI}api/responses/${survey._id}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(response),
-        }
-      );
+      const apiResponse = await fetch(`${API_URI}api/responses/${survey._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response),
+      });
 
       if (!apiResponse.ok) {
         throw new Error(`HTTP error! Status: ${apiResponse.status}`);
@@ -63,13 +71,36 @@ const SurveyDetails = ({ params }: any) => {
     return response ? response.selectedOptionIndex : null;
   };
 
+  const prepareChartData = (
+    surveyQuestions: any[],
+    responseStats: { [x: string]: {} }
+  ) => {
+    let chartData: { question: any; option: string; count: any }[] = [];
+
+    surveyQuestions.forEach(
+      (question: { _id: string | number; options: any[]; text: any }) => {
+        const questionResponses: any = responseStats[question._id] || {};
+        question.options.forEach(
+          (optionText: any, optionIndex: string | number) => {
+            const count = questionResponses[optionIndex] || 0;
+            chartData.push({
+              question: question.text,
+              option: ` ${question.text}: ${optionText}`,
+              count: count,
+            });
+          }
+        );
+      }
+    );
+
+    return chartData;
+  };
+
   useEffect(() => {
     if (surveyId) {
       const fetchSurveyDetails = async () => {
         try {
-          const response = await fetch(
-            `${API_URI}api/surveys/${surveyId}`
-          );
+          const response = await fetch(`${API_URI}api/surveys/${surveyId}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -213,6 +244,27 @@ const SurveyDetails = ({ params }: any) => {
             >
               Submit Survey
             </Button>
+            {survey && myResponses && responseStats && (
+              <ResponsiveContainer width='100%' height={400}>
+                <BarChart
+                  data={prepareChartData(survey.questions, responseStats)}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                  layout='vertical'
+                >
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis type='number' />
+                  <YAxis dataKey='option' width={150} type='category' />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey='count' fill='#8884d8' name='Response Count' />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </Card>
         </div>
       )}
